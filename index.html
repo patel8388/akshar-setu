@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f2">
+  <meta name="description" content="A privacy-first Gujarati Unicode and legacy-font conversion workspace. Convert locally with mapping packs you are authorized to use.">
+  <title>Akshar Setu — Gujarati Font Converter</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="converter-core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Akshar Setu home">
+      <span class="brand-mark" aria-hidden="true">અ</span>
+      <span><strong>Akshar Setu</strong><small>Gujarati text tools</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#converter">Converter</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Gujarati · ગુજરાતી</p>
+        <h1>Move Gujarati text<br><em>between font worlds.</em></h1>
+        <p class="hero-lede">A simple workspace for Unicode and legacy Gujarati text. Work in either direction, keep your text on your device, and add mapping packs for the fonts you use.</p>
+        <div class="hero-pills" aria-label="Highlights">
+          <span>↔ Two-way workflow</span><span>Local processing</span><span>Mobile friendly</span>
+        </div>
+      </div>
+      <aside class="hero-note">
+        <span class="note-icon" aria-hidden="true">Aa</span>
+        <div><strong>Bring your font map</strong><p>Legacy fonts use different character tables. This original tool does not bundle proprietary tables; import a JSON mapping pack you have permission to use.</p></div>
+      </aside>
+    </section>
+
+    <section class="tool-section wrap" id="converter" aria-labelledby="tool-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">THE CONVERTER</p><h2 id="tool-title">Your Gujarati text workspace</h2></div>
+        <span class="privacy-badge"><span class="lock-icon" aria-hidden="true">▣</span> Text stays in this browser</span>
+      </div>
+
+      <div class="converter-card">
+        <div class="tool-topline">
+          <div class="mode-switch" role="group" aria-label="Conversion direction">
+            <button class="mode-button active" type="button" data-mode="legacyToUnicode" aria-pressed="true">Legacy → Unicode</button>
+            <button class="mode-button" type="button" data-mode="unicodeToLegacy" aria-pressed="false">Unicode → Legacy</button>
+          </div>
+          <div class="pack-controls">
+            <label class="sr-only" for="fontPack">Active mapping pack</label>
+            <select id="fontPack" aria-describedby="pack-help">
+              <option value="">No mapping pack loaded</option>
+            </select>
+            <button class="button button-outline" id="uploadPack" type="button">＋ Add map</button>
+            <input id="packFile" type="file" accept="application/json,.json" hidden>
+          </div>
+        </div>
+        <p class="pack-help" id="pack-help">Choose a local JSON map pack to enable legacy conversion. No text or file is uploaded.</p>
+
+        <div class="workbench">
+          <section class="text-panel source-panel" aria-labelledby="source-label">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">INPUT</span><h3 id="source-label">Legacy font text</h3></div>
+              <button class="text-action" id="sampleText" type="button">Try Unicode sample</button>
+            </div>
+            <label class="sr-only" for="sourceText">Text to convert</label>
+            <textarea id="sourceText" spellcheck="false" placeholder="Paste or type Gujarati text here…" aria-describedby="source-count"></textarea>
+            <div class="panel-foot"><span id="source-count">0 characters</span><button class="text-action" id="normalizeText" type="button" title="Normalize Unicode input to NFC">Normalize Unicode</button></div>
+          </section>
+
+          <div class="direction-rail" aria-hidden="true"><span>→</span><small>CONVERT</small></div>
+
+          <section class="text-panel output-panel" aria-labelledby="output-label">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">OUTPUT</span><h3 id="output-label">Gujarati Unicode</h3></div>
+              <button class="text-action" id="copyOutput" type="button">Copy</button>
+            </div>
+            <label class="sr-only" for="outputText">Converted output</label>
+            <textarea id="outputText" spellcheck="false" placeholder="Converted text will appear here…" readonly></textarea>
+            <div class="panel-foot"><span id="output-count">0 characters</span><button class="text-action" id="downloadOutput" type="button">Download .txt</button></div>
+          </section>
+        </div>
+
+        <div class="tool-bottom">
+          <p class="status-message" id="statusMessage" role="status" aria-live="polite">Add a mapping pack to start converting legacy text.</p>
+          <div class="bottom-actions"><button class="button button-quiet" id="swapText" type="button">⇄ Swap</button><button class="button button-quiet" id="clearText" type="button">Clear</button></div>
+        </div>
+      </div>
+      <p class="tool-caption">Unicode cleanup is available without a map. Legacy conversion requires a valid mapping pack and may need the matching licensed font installed on your computer to display the legacy output correctly.</p>
+    </section>
+
+    <section class="catalog-section wrap" aria-labelledby="catalog-title">
+      <div class="catalog-card">
+        <div><p class="eyebrow">FONT FAMILIES</p><h2 id="catalog-title">One workspace, many map packs</h2><p>Use a separate mapping pack for each legacy font or version. Names below are examples of families users may encounter; no encoding tables or font files are included with this site.</p></div>
+        <div class="font-tags" aria-label="Example Gujarati legacy font families"><span>Tera / Terafont</span><span>Akruti</span><span>Gopika</span><span>Krishna</span><span>LMG</span><span>Saral</span><span>Shree Lipi</span><span>EKLG</span><span>ISM</span><span>Sulekh</span></div>
+      </div>
+    </section>
+
+    <section class="info-grid wrap" id="how-it-works">
+      <article class="info-card"><span class="step-number">01</span><h3>Add a map</h3><p>Choose a JSON mapping pack stored on your device. The pack links Gujarati Unicode sequences to legacy-font sequences.</p></article>
+      <article class="info-card"><span class="step-number">02</span><h3>Pick a direction</h3><p>Convert legacy text to Unicode, or reverse the direction to prepare Unicode text for a legacy layout.</p></article>
+      <article class="info-card"><span class="step-number">03</span><h3>Copy or save</h3><p>Copy the result or download a plain-text file. Unmapped characters are kept unchanged and counted in the status line.</p></article>
+	</section>
+
+	<section class="privacy-section wrap" id="privacy">
+	  <div class="privacy-icon" aria-hidden="true">⌁</div>
+	  <div><p class="eyebrow">PRIVATE BY DESIGN</p><h2>Your text is processed on your device.</h2><p>This tool does not transmit input text, use analytics, or save text in a database. Imported mapping packs stay in memory until you close or refresh the page. GitHub Pages may log visitor connection details, such as IP addresses, for security; it does not receive the text you type here.</p></div>
+	</section>
+
+	<section class="faq-section wrap">
+      <p class="eyebrow">QUICK ANSWERS</p><h2>Good to know</h2>
+      <details><summary>Why do I need a mapping pack?</summary><p>Legacy Gujarati fonts often assign different visible letters to different character codes. A pack supplies that font-specific table. This site includes the conversion engine, not proprietary mapping tables.</p></details>
+      <details><summary>Will this install or provide the legacy font?</summary><p>No. Font files are separate from text conversion. Use fonts you are licensed to install, and check that your target app has the right font available when viewing legacy output.</p></details>
+      <details><summary>What can I do before importing a pack?</summary><p>You can paste Gujarati Unicode text and normalize it to NFC. Full legacy conversion becomes available after you load a valid map.</p></details>
+    </section>
+  </main>
+
+  <footer class="site-footer wrap"><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">અ</span><span><strong>Akshar Setu</strong><small>ગુજરાતી લખાણ સાધન</small></span></a><p>Original independent tool · No font files or third-party conversion code bundled</p><a href="#top">Back to top ↑</a></footer>
+</body>
+</html>
