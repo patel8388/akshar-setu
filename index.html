@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f2">
   <meta name="description" content="A privacy-first Gujarati Unicode and legacy-font conversion workspace. Convert locally with mapping packs you are authorized to use.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'">
   <title>Akshar Setu — Gujarati Font Converter</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="converter-core.js"></script>
+  <script defer src="font-catalog.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -18,6 +20,7 @@
     </a>
     <nav aria-label="Main navigation">
       <a href="#converter">Converter</a>
+      <a href="#font-catalog">All fonts</a>
       <a href="#how-it-works">How it works</a>
       <a href="#privacy">Privacy</a>
     </nav>
@@ -28,14 +31,14 @@
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> Gujarati · ગુજરાતી</p>
         <h1>Move Gujarati text<br><em>between font worlds.</em></h1>
-        <p class="hero-lede">A simple workspace for Unicode and legacy Gujarati text. Work in either direction, keep your text on your device, and add mapping packs for the fonts you use.</p>
+        <p class="hero-lede">Choose Unicode cleanup or a legacy conversion direction. Explore every font option listed by the two reference sites, with honest map availability and private, local processing.</p>
         <div class="hero-pills" aria-label="Highlights">
-          <span>↔ Two-way workflow</span><span>Local processing</span><span>Mobile friendly</span>
+          <span>Unicode cleanup ready</span><span>Two legacy directions</span><span>Local processing</span>
         </div>
       </div>
       <aside class="hero-note">
         <span class="note-icon" aria-hidden="true">Aa</span>
-        <div><strong>Bring your font map</strong><p>Legacy fonts use different character tables. This original tool does not bundle proprietary tables; import a JSON mapping pack you have permission to use.</p></div>
+        <div><strong>Font listed ≠ conversion enabled</strong><p>Unicode cleanup works now. Legacy options need an authorized, font-specific mapping pack; no verified legacy maps are bundled. We do not copy proprietary tables from other converters.</p></div>
       </aside>
     </section>
 
@@ -48,24 +51,30 @@
       <div class="converter-card">
         <div class="tool-topline">
           <div class="mode-switch" role="group" aria-label="Conversion direction">
-            <button class="mode-button active" type="button" data-mode="legacyToUnicode" aria-pressed="true">Legacy → Unicode</button>
+            <button class="mode-button active" type="button" data-mode="unicodeCleanup" aria-pressed="true">Unicode cleanup</button>
+            <button class="mode-button" type="button" data-mode="legacyToUnicode" aria-pressed="false">Legacy → Unicode</button>
             <button class="mode-button" type="button" data-mode="unicodeToLegacy" aria-pressed="false">Unicode → Legacy</button>
           </div>
           <div class="pack-controls">
             <label class="sr-only" for="fontPack">Active mapping pack</label>
             <select id="fontPack" aria-describedby="pack-help">
-              <option value="">No mapping pack loaded</option>
+              <option value="">No local mapping pack loaded</option>
             </select>
             <button class="button button-outline" id="uploadPack" type="button">＋ Add map</button>
             <input id="packFile" type="file" accept="application/json,.json" hidden>
           </div>
         </div>
-        <p class="pack-help" id="pack-help">Choose a local JSON map pack to enable legacy conversion. No text or file is uploaded.</p>
+        <div class="font-choice-row">
+          <label for="legacyFont">Legacy font / version</label>
+          <select id="legacyFont" aria-describedby="pack-help"><option value="">Choose a listed font to see map availability</option></select>
+          <a class="text-action" href="#font-catalog">Browse all fonts</a>
+        </div>
+        <p class="pack-help" id="pack-help">Unicode cleanup is ready. Legacy conversion requires a local, authorized mapping pack.</p>
 
         <div class="workbench">
           <section class="text-panel source-panel" aria-labelledby="source-label">
             <div class="panel-heading">
-              <div><span class="panel-kicker">INPUT</span><h3 id="source-label">Legacy font text</h3></div>
+              <div><span class="panel-kicker">INPUT</span><h3 id="source-label">Gujarati Unicode</h3></div>
               <button class="text-action" id="sampleText" type="button">Try Unicode sample</button>
             </div>
             <label class="sr-only" for="sourceText">Text to convert</label>
@@ -77,7 +86,7 @@
 
           <section class="text-panel output-panel" aria-labelledby="output-label">
             <div class="panel-heading">
-              <div><span class="panel-kicker">OUTPUT</span><h3 id="output-label">Gujarati Unicode</h3></div>
+              <div><span class="panel-kicker">OUTPUT</span><h3 id="output-label">Normalized Unicode</h3></div>
               <button class="text-action" id="copyOutput" type="button">Copy</button>
             </div>
             <label class="sr-only" for="outputText">Converted output</label>
@@ -87,22 +96,26 @@
         </div>
 
         <div class="tool-bottom">
-          <p class="status-message" id="statusMessage" role="status" aria-live="polite">Add a mapping pack to start converting legacy text.</p>
-          <div class="bottom-actions"><button class="button button-quiet" id="swapText" type="button">⇄ Swap</button><button class="button button-quiet" id="clearText" type="button">Clear</button></div>
+          <p class="status-message" id="statusMessage" role="status" aria-live="polite">Unicode cleanup is ready. Your text stays in this browser.</p>
+          <div class="bottom-actions"><button class="button button-primary" id="convertNow" type="button">Convert now</button><button class="button button-quiet" id="swapText" type="button">⇄ Swap</button><button class="button button-quiet" id="clearText" type="button">Clear</button></div>
         </div>
       </div>
       <p class="tool-caption">Unicode cleanup is available without a map. Legacy conversion requires a valid mapping pack and may need the matching licensed font installed on your computer to display the legacy output correctly.</p>
     </section>
 
-    <section class="catalog-section wrap" aria-labelledby="catalog-title">
+    <section class="catalog-section wrap" id="font-catalog" aria-labelledby="catalog-title">
       <div class="catalog-card">
-        <div><p class="eyebrow">FONT FAMILIES</p><h2 id="catalog-title">One workspace, many map packs</h2><p>Use a separate mapping pack for each legacy font or version. Names below are examples of families users may encounter; no encoding tables or font files are included with this site.</p></div>
-        <div class="font-tags" aria-label="Example Gujarati legacy font families"><span>Tera / Terafont</span><span>Akruti</span><span>Gopika</span><span>Krishna</span><span>LMG</span><span>Saral</span><span>Shree Lipi</span><span>EKLG</span><span>ISM</span><span>Sulekh</span></div>
+        <div><p class="eyebrow">ALL REFERENCE FONT OPTIONS</p><h2 id="catalog-title">Find your font and check availability</h2><p id="catalogSummary">Loading the reference font catalog…</p><p class="catalog-disclaimer">These names are a catalog, not a claim of conversion support. Different versions may use different encodings. A missing map is never replaced by a guessed or unrelated map.</p></div>
+        <div class="catalog-legend"><strong>Ready now</strong><span>Unicode NFC cleanup</span><strong>Legacy map status</strong><span>Not bundled · import an authorized pack</span></div>
       </div>
+      <div class="catalog-tools"><label for="catalogSearch">Search font names</label><input id="catalogSearch" type="search" placeholder="Try Terafont, LMG, Gopika…" autocomplete="off"><p id="catalogCount" role="status" aria-live="polite"></p></div>
+      <div class="font-catalog-grid" id="catalogGrid" aria-label="Legacy font catalog"></div>
+      <noscript><p>JavaScript is required for local conversion and the font catalog. No input text is sent to a server.</p></noscript>
+      <p class="catalog-sources">Font-name references: <a href="https://www.fontconverter.online/gujarati/gujarati-unicode-tera-font-converter" target="_blank" rel="noopener noreferrer">FontConverter.online</a> and <a href="https://www.pramukhfontconverter.com/gujarati" target="_blank" rel="noopener noreferrer">Pramukh Gujarati Font Converter</a>. We use names only, not their converter code, fonts, or mapping tables.</p>
     </section>
 
     <section class="info-grid wrap" id="how-it-works">
-      <article class="info-card"><span class="step-number">01</span><h3>Add a map</h3><p>Choose a JSON mapping pack stored on your device. The pack links Gujarati Unicode sequences to legacy-font sequences.</p></article>
+      <article class="info-card"><span class="step-number">01</span><h3>Choose your tool and font</h3><p>Unicode cleanup works immediately. For legacy conversion, choose the exact font/version and import an authorized JSON mapping pack.</p></article>
       <article class="info-card"><span class="step-number">02</span><h3>Pick a direction</h3><p>Convert legacy text to Unicode, or reverse the direction to prepare Unicode text for a legacy layout.</p></article>
       <article class="info-card"><span class="step-number">03</span><h3>Copy or save</h3><p>Copy the result or download a plain-text file. Unmapped characters are kept unchanged and counted in the status line.</p></article>
 	</section>
@@ -116,7 +129,8 @@
       <p class="eyebrow">QUICK ANSWERS</p><h2>Good to know</h2>
       <details><summary>Why do I need a mapping pack?</summary><p>Legacy Gujarati fonts often assign different visible letters to different character codes. A pack supplies that font-specific table. This site includes the conversion engine, not proprietary mapping tables.</p></details>
       <details><summary>Will this install or provide the legacy font?</summary><p>No. Font files are separate from text conversion. Use fonts you are licensed to install, and check that your target app has the right font available when viewing legacy output.</p></details>
-      <details><summary>What can I do before importing a pack?</summary><p>You can paste Gujarati Unicode text and normalize it to NFC. Full legacy conversion becomes available after you load a valid map.</p></details>
+      <details><summary>Why is my legacy font listed but conversion unavailable?</summary><p>The catalog covers the font options named by the two reference sites. We have not verified a reusable license and tested a mapping for those fonts, so no legacy maps are bundled. Listing a name does not enable conversion. An imported pack is local user-provided data, not an independently verified map.</p></details>
+      <details><summary>What can I do before importing a pack?</summary><p>Select Unicode cleanup and press Convert now, or try the Unicode sample. NFC normalization standardizes canonically equivalent Unicode sequences; it does not decode legacy text, translate, transliterate, correct spelling, or change the typeface.</p></details>
     </section>
   </main>
 

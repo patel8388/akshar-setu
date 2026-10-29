@@ -1,42 +1,54 @@
-# Akshar Setu — Gujarati text converter
+# Akshar Setu — Gujarati text tools
 
-An original, static Gujarati text-conversion workspace combining useful ideas from two public interfaces: two-way Unicode/legacy conversion, a font-map selector, copy/download actions, and a compact guide. It runs entirely in the browser.
+A privacy-first static workspace at **https://patel8388.github.io/akshar-setu/**. Text and imported mapping files are processed only in the browser; there is no conversion API, analytics, database, or external font request.
 
-## Current scope
+## What works now
 
-The app includes a working bidirectional conversion engine and NFC normalization. It deliberately ships **without third-party legacy-font tables or font files**. The referenced converter pages describe their behavior and font catalogs, but do not grant permission to redistribute their code or conversion maps; a public Gujarati converter repository checked during research also has no declared license. Add a mapping pack that you own or are authorized to use to enable conversion for that font/version.
+- **Unicode cleanup:** NFC normalization, immediately usable without a mapping file.
+- **Visible conversion choices:** Unicode cleanup, Legacy → Unicode, and Unicode → Legacy, with an explicit action button.
+- **Complete reference-font catalog:** 104 distinct legacy font labels/versions from the two reference selectors, searchable and selectable with mapping availability shown.
+- **Local mapping-pack engine:** import authorized JSON data, use longest-sequence matching in either direction, copy output, and download UTF-8 text.
 
-## Run locally
+**There are currently zero bundled, independently verified legacy-font mappings.** A font appearing in the catalog is not a claim that it can be converted. Legacy conversion is disabled until a local pack is selected. Imported packs are user-provided data, not independently verified fonts or encodings. No proprietary converter code, mapping tables, or font files from the reference sites have been copied.
 
-Open `index.html` in a modern browser, or serve the folder with any static web server. No build step or package installation is needed.
+The catalog preserves source labels and variants. Font Converter Online has 31 unique non-Unicode selector labels; Pramukh has 94 unique labels (95 options, with `Krishna (Version 1)` repeated). There are 21 exact case/whitespace-insensitive overlaps, giving 104 distinct labels. Some source labels combine several names with `|`; these remain intact. Similar names are **not** assumed to have identical encodings.
+
+See [MAPPING-SOURCES.md](MAPPING-SOURCES.md) for references, reuse findings, and the acceptance checklist for real-font support.
+
+## Run and test
+
+Open `index.html` in a modern browser, or run a static server in this folder. No build step or package installation is required.
+
+```sh
+python3 -m http.server 8080
+node test.js
+```
+
+The tests use synthetic character pairs to test the generic engine. They do not prove support for any real legacy font.
 
 ## Mapping-pack format
 
-Create a UTF-8 JSON file with this shape. Each key is a Unicode Gujarati sequence and its value is the exact legacy character sequence for one specific font/version.
+Create a UTF-8 JSON file with this shape, using pairs you own or are authorized to use. Each key is a Unicode sequence and each value is its exact legacy sequence for one font/version.
 
 ```json
 {
-  "name": "My licensed Gujarati font map",
+  "name": "My authorized font map",
   "version": "1.0",
-  "font": "Font family / version",
+  "font": "Exact font family and version",
   "unicodeToLegacy": {
     "YOUR_UNICODE_SEQUENCE": "YOUR_LEGACY_SEQUENCE"
   }
 }
 ```
 
-Replace the example key/value with real pairs from an authorized source. The converter uses longest-match mapping, preserves unmatched characters, and reports duplicate legacy keys because some maps cannot be reversed without ambiguity. Imported packs are held in memory only for the current browser session. The app does not upload them or your text.
+The blank `mapping-pack.template.json` is a starter structure, not a real map. Packs are kept only in memory for the current page session. Loading a pack does not upload it and does not install its font. The correct licensed font may be required in your target app to display legacy output.
 
-## Included files
+The generic engine preserves and counts unmapped characters. It never guesses a missing font map. Duplicate legacy sequences make reverse conversion ambiguous, so the engine blocks reverse conversion rather than choosing an arbitrary Unicode character. This simple sequence-table format has no script-specific reordering rules; a real font may need additional handling for pre-base vowels, reph, conjuncts, or contextual glyph forms. Do not treat a schema-valid import as complete or accurate font support. Proofread against the source and test both directions with representative fixtures.
 
-- `index.html` — landing page, converter, FAQs, and privacy note.
-- `styles.css` — responsive styling.
-- `converter-core.js` — independent, longest-match bidirectional map engine.
-- `app.js` — local-only browser interactions.
-- `mapping-pack.template.json` — blank starter structure.
-- `DEPLOY.md` — static hosting notes.
-- `.nojekyll` — tells GitHub Pages to serve the static files as-is.
+NFC normalization is not legacy decoding, translation, transliteration, spelling correction, or a change of font face.
 
-## Hosting
+## Files and deployment
 
-Any static host can serve this folder. For a VPS, copy these files to a new web root or subdirectory; do not replace an existing site. See `DEPLOY.md` for a generic Nginx example. This project has no hosting-specific dependency.
+`index.html`, `styles.css`, `app.js`, `converter-core.js`, and `font-catalog.js` form the app. `test.js` contains dependency-free regression checks. `.nojekyll` keeps GitHub Pages serving the static files as-is. GitHub Pages publishes the root of the `main` branch; updates committed there deploy to the same public link. `DEPLOY.md` also contains generic static-server notes.
+
+The page's Content Security Policy sets `connect-src 'none'` as an additional guard against conversion-time network requests. GitHub Pages may log visitor connection details, but it does not receive the text typed into this app.
